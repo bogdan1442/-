@@ -1,5 +1,8 @@
 from tkinter import *
 from tkinter import ttk
+import webbrowser
+from datetime import datetime
+from tkinter import messagebox
 root = Tk()
 root.geometry("1680x1000")
 root.title("Энциклопедия по Killing Floor")
@@ -38,6 +41,67 @@ frame.place(relx = 0.30, rely = 0.50, width=700, height=300)
 
 img_label = Label(frame)
 img_label.place(x = 0, y = 0, relwidth = 1, relheight = 1)
+
+#==========================================================================
+def feedback():
+    stat = Toplevel(root)
+    stat.geometry("800x550")
+    stat.title("Обратная связь")
+    stat.resizable(width = False, height = False)
+    stat_image = PhotoImage(file="C:/Users/Admin/Desktop/уэээ))/relax.png")
+    stat_label = Label(stat, image=stat_image)
+    stat_label.place(x = 0, y = 0, relwidth = 1, relheight = 1)
+    stat_label.image = stat_image
+    title = Label(stat, text ='Форма обратной связи', bg="#FFFFFF", fg='#000000', font=('Arial', 16))
+    title.pack()
+    #===========================Имя=========================================
+    name = Label(stat, text='Ваше имя:')
+    name.pack()
+    name_entry = Entry(stat, width=40)
+    name_entry.pack(pady=5)
+    #===========================Email=======================================
+    email = Label(stat, text='Ваш email:')
+    email.pack()
+    email_entry = Entry(stat, width=40)
+    email_entry.pack(pady=5)
+    #===========================Оценка======================================
+    mark = Label(stat, text='Оцените энциклопедию:')
+    mark.pack()
+    rating_var = IntVar()
+    for i in range(1,6):
+        mark_btn = Radiobutton(stat, text=str(i), variable=rating_var, value=i)
+        mark_btn.pack()
+    #======================Комментарий======================================
+    comment = Label(stat, text='Оставьте комментарий:')
+    comment.pack()
+    comment_text = Text(stat, width=50, height=8)
+    comment_text.pack(pady=5)
+    def save_feedback():
+        name = name_entry.get()
+        email = email_entry.get()
+        rating = rating_var.get()
+        comment = comment_text.get("1.0", END).strip()
+        timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        if not name or not rating:
+            messagebox.showerror("Ошибка", "Пожалуйста, заполните имя и оценку!")
+            return
+        try:
+            with open("C:/Users/Admin/Desktop/уэээ))/feedback.txt", "a", encoding="utf-8") as f:
+                f.write(f"Дата: {timestamp}\n")
+                f.write(f"Имя: {name}\n")
+                f.write(f"Email: {email}\n")
+                f.write(f"Оценка: {rating}/5\n")
+                f.write(f"Комментарий: {comment}\n")
+                f.write("="*50 + "\n")
+            messagebox.showinfo("Спасибо!", "Ваш отзыв сохранен!")
+            stat.destroy()
+        except Exception as e:
+            messagebox.showerror("Ошибка", f"Не удалось сохранить файл: {str(e)}")
+
+    save = Button(stat, text="Отправить", command=save_feedback)
+    save.pack(pady=10)
+stat = Button(root, text = 'Обратная связь', command = feedback)
+stat.pack()
 
 content = {
     'Введение': "Killing Floor - кооперативный хоррор-шутер на выживание с видом от первого лица, действие которого разворачивается на улицах заброшенных городов и предместьях Британии незадолго после неудачного эксперимента по созданию и клонированию «суперсолдат». Вы и ваши товарищи — члены войск вооруженных сил, сброшенных в эти места с простой задачей — выжить как можно дольше, зачистив зону высадки от последствий неудачного эксперимента!",
